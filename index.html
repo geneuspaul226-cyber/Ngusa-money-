@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#c8102e">
+<meta name="description" content="NGUSA MONEY - Rekodi za biashara ya uwakala">
+<link rel="manifest" href="manifest.json">
+<title>NGUSA MONEY</title>
+<style>
+:root{--red:#c8102e;--dark:#8f0b21;--bg:#f5f6f8;--ink:#20232a;--muted:#6b7280;--line:#e5e7eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(135deg,var(--red),var(--dark));color:#fff;padding:20px 16px 24px;border-radius:0 0 22px 22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.4px}.logo{width:38px;height:38px;border-radius:12px;background:#fff;color:var(--red);display:grid;place-items:center;font-weight:900}
+.sub{font-size:12px;opacity:.85;margin-top:3px}.balance-label{font-size:12px;opacity:.85;margin-top:24px}.balance{font-size:30px;font-weight:800;margin-top:2px}
+main{max-width:760px;margin:auto;padding:14px 14px 90px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:-2px}
+.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;box-shadow:0 2px 8px #11100008}
+.k-label{font-size:12px;color:var(--muted)}.k-value{font-size:19px;font-weight:750;margin-top:5px}.red{color:var(--red)}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:12px 14px;font-weight:700}
+.action{background:#fff;border:1px solid var(--line);color:var(--ink);text-align:left;display:flex;gap:10px;align-items:center}
+.action b{display:block}.action small{display:block;color:var(--muted);font-weight:400;margin-top:2px}
+.primary{background:var(--red);color:#fff}.secondary{background:#f1f2f4;color:var(--ink)}
+.section-title{font-size:16px;font-weight:800;margin:20px 2px 10px}
+.networks{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.net{display:flex;justify-content:space-between;align-items:center}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px}
+.netname{font-weight:700;font-size:13px}.netval{font-size:14px;font-weight:750}
+.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;margin-top:12px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.muted{color:var(--muted);font-size:12px}
+input,select{width:100%;padding:12px;border:1px solid #d7dbe1;border-radius:10px;background:#fff;font:inherit;margin-top:5px}
+label{font-size:13px;font-weight:650;display:block;margin-top:12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hidden{display:none!important}
+.tx{padding:12px 0;border-bottom:1px solid var(--line)}.tx:last-child{border-bottom:0}
+.pill{font-size:11px;padding:4px 8px;border-radius:20px;background:#f3f4f6;color:#4b5563}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:5}
+.tab{background:transparent;color:var(--muted);font-size:11px;padding:6px 10px;display:grid;gap:3px;justify-items:center}.tab.active{color:var(--red)}
+.tab span:first-child{font-size:19px}
+.notice{font-size:12px;color:var(--muted);line-height:1.5}
+.empty{text-align:center;color:var(--muted);padding:22px 8px;font-size:13px}
+.danger{color:#b42318}.positive{color:#087443}
+@media(min-width:600px){.cards{grid-template-columns:repeat(4,1fr)}.networks{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">N</div><div>NGUSA MONEY<div class="sub">USIMAMIZI WA BIASHARA YA UWAKALA</div></div></div>
+ <div class="balance-label">SALIO LA FEDHA TASLIMU</div>
+ <div class="balance" id="cashTotal">TSh 0</div>
+</header>
+<main>
+ <section id="dashboard">
+  <div class="cards">
+   <div class="card"><div class="k-label">Faida ya leo</div><div class="k-value positive" id="todayProfit">TSh 0</div></div>
+   <div class="card"><div class="k-label">Miamala ya leo</div><div class="k-value" id="todayCount">0</div></div>
+   <div class="card"><div class="k-label">Jumla ya kuweka</div><div class="k-value" id="todayDeposit">TSh 0</div></div>
+   <div class="card"><div class="k-label">Jumla ya kutoa</div><div class="k-value" id="todayWithdraw">TSh 0</div></div>
+  </div>
+  <div class="actions">
+   <button class="action" onclick="openForm('Weka fedha')"><span style="font-size:23px;color:#087443">＋</span><span><b>Weka fedha</b><small>Rekodi amana</small></span></button>
+   <button class="action" onclick="openForm('Toa fedha')"><span style="font-size:23px;color:var(--red)">－</span><span><b>Toa fedha</b><small>Rekodi utoaji</small></span></button>
+  </div>
+  <div class="section-title">Salio la mitandao</div>
+  <div class="networks" id="networkCards"></div>
+  <div class="panel"><div class="row"><b>Miamala ya karibuni</b><button class="secondary" onclick="showTab('history')">Ona yote</button></div><div id="recent"></div></div>
+ </section>
+
+ <section id="transaction" class="hidden">
+  <div class="section-title">Rekodi muamala</div>
+  <div class="panel">
+   <form id="txForm">
+    <label>Aina ya muamala<select id="txType"><option>Weka fedha</option><option>Toa fedha</option></select></label>
+    <label>Mtandao<select id="network"><option>M-Pesa</option><option>Tigo Pesa</option><option>Airtel Money</option><option>HaloPesa</option></select></label>
+    <label>Kiasi (TSh)<input id="amount" type="number" min="1" step="1" required placeholder="Mfano 50000"></label>
+    <div class="form-grid">
+     <div><label>Kamisheni (TSh)<input id="commission" type="number" min="0" step="1" value="0"></label></div>
+     <div><label>Tarehe na muda<input id="txDate" type="datetime-local" required></label></div>
+    </div>
+    <label>Maelezo (hiari)<input id="note" maxlength="80" placeholder="Maelezo mafupi"></label>
+    <p class="notice">Kuweka fedha: salio la cash huongezeka na salio la mtandao hupungua. Kutoa fedha: cash hupungua na salio la mtandao huongezeka. Kamisheni huongezwa kwenye faida.</p>
+    <button class="primary" type="submit" style="width:100%;margin-top:14px">Hifadhi muamala</button>
+   </form>
+  </div>
+ </section>
+
+ <section id="history" class="hidden">
+  <div class="section-title">Historia ya miamala</div>
+  <div class="panel">
+   <label>Tafuta / chagua mtandao<input id="searchTx" placeholder="Tafuta mtandao au maelezo..." oninput="renderHistory()"></label>
+   <div id="historyList"></div>
+  </div>
+ </section>
+
+ <section id="reports" class="hidden">
+  <div class="section-title">Ripoti ya biashara</div>
+  <div class="cards">
+   <div class="card"><div class="k-label">Kamisheni zote</div><div class="k-value" id="allCommission">TSh 0</div></div>
+   <div class="card"><div class="k-label">Matumizi</div><div class="k-value" id="allExpenses">TSh 0</div></div>
+   <div class="card"><div class="k-label">Faida halisi</div><div class="k-value positive" id="netProfit">TSh 0</div></div>
+   <div class="card"><div class="k-label">Miamala yote</div><div class="k-value" id="allCount">0</div></div>
+  </div>
+  <div class="panel">
+   <b>Ongeza matumizi</b>
+   <form id="expenseForm">
+    <label>Sababu ya matumizi<input id="expenseNote" required maxlength="80" placeholder="Mfano: Kodi, umeme"></label>
+    <label>Kiasi (TSh)<input id="expenseAmount" type="number" min="1" required></label>
+    <button class="primary" style="width:100%;margin-top:12px">Hifadhi matumizi</button>
+   </form>
+  </div>
+  <div class="panel"><div class="row"><b>Matumizi yaliyorekodiwa</b><span class="muted">Yote</span></div><div id="expenseList"></div></div>
+  <div class="panel">
+   <b>Pakua nakala ya taarifa</b>
+   <p class="notice">Pakua miamala na matumizi kama faili la CSV linaloweza kufunguliwa kwenye Excel.</p>
+   <button class="secondary" onclick="exportCSV()">Pakua CSV</button>
+  </div>
+ </section>
+
+ <section id="settings" class="hidden">
+  <div class="section-title">Mipangilio ya salio la mwanzo</div>
+  <div class="panel">
+   <p class="notice">Weka fedha ulizonazo mwanzo. Hii itasaidia app kuonyesha salio linalokadiriwa. Unaweza kusasisha salio wakati wowote.</p>
+   <form id="openingForm">
+    <label>Fedha taslimu ya mwanzo (TSh)<input id="openingCash" type="number" min="0"></label>
+    <div id="openingNetworks"></div>
+    <button class="primary" style="width:100%;margin-top:14px">Hifadhi salio la mwanzo</button>
+   </form>
+  </div>
+  <div class="panel">
+   <b>Taarifa muhimu</b>
+   <p class="notice">Taarifa huhifadhiwa kwenye kifaa hiki. Usifute data ya kivinjari au app bila kuwa na nakala. App hii ni ya kurekodi na kuhesabu tu; haitumi wala kupokea fedha moja kwa moja.</p>
+   <button class="secondary danger" onclick="resetData()">Futa taarifa zote</button>
+  </div>
+ </section>
+</main>
+<nav class="tabs">
+ <button class="tab active" data-tab="dashboard" onclick="showTab('dashboard')"><span>⌂</span>Nyumbani</button>
+ <button class="tab" data-tab="transaction" onclick="openForm('Weka fedha')"><span>＋</span>Muamala</button>
+ <button class="tab" data-tab="history" onclick="showTab('history')"><span>↺</span>Historia</button>
+ <button class="tab" data-tab="reports" onclick="showTab('reports')"><span>▤</span>Ripoti</button>
+ <button class="tab" data-tab="settings" onclick="showTab('settings')"><span>⚙</span>Salio</button>
+</nav>
+<script>
+const NETS=['M-Pesa','Tigo Pesa','Airtel Money','HaloPesa'];
+const COLORS={'M-Pesa':'#d71920','Tigo Pesa':'#1768b2','Airtel Money':'#e32636','HaloPesa':'#f28c28'};
+const KEY='ngusa_money_v1';
+let state=load();
+function fresh(){return {openingCash:0,opening:{'M-Pesa':0,'Tigo Pesa':0,'Airtel Money':0,'HaloPesa':0},transactions:[],expenses:[]}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){return fresh()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));renderAll()}
+function money(n){return 'TSh '+Math.round(Number(n)||0).toLocaleString('en-US')}
+function dateNow(){let d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
+function dayKey(v){return new Date(v).toLocaleDateString('en-CA')}
+function isToday(v){return dayKey(v)===dayKey(new Date())}
+function totals(){
+ let cash=Number(state.openingCash)||0, nets={...state.opening},commission=0;
+ state.transactions.forEach(t=>{let a=Number(t.amount)||0,c=Number(t.commission)||0;commission+=c;
+  if(t.type==='Weka fedha'){cash+=a;nets[t.network]-=a}
+  else{cash-=a;nets[t.network]+=a}
+ });
+ let expenses=state.expenses.reduce((s,e)=>s+Number(e.amount),0);
+ return {cash,nets,commission,expenses,profit:commission-expenses};
+}
+function renderAll(){let x=totals(),today=state.transactions.filter(t=>isToday(t.date));
+ document.getElementById('cashTotal').textContent=money(x.cash);
+ document.getElementById('todayProfit').textContent=money(today.reduce((s,t)=>s+Number(t.commission),0)-state.expenses.filter(e=>isToday(e.date)).reduce((s,e)=>s+Number(e.amount),0));
+ document.getElementById('todayCount').textContent=today.length;
+ document.getElementById('todayDeposit').textContent=money(today.filter(t=>t.type==='Weka fedha').reduce((s,t)=>s+Number(t.amount),0));
+ document.getElementById('todayWithdraw').textContent=money(today.filter(t=>t.type==='Toa fedha').reduce((s,t)=>s+Number(t.amount),0));
+ document.getElementById('networkCards').innerHTML=NETS.map(n=>`<div class="card net"><span class="netname"><i class="dot" style="background:${COLORS[n]}"></i>${n}</span><span class="netval">${money(x.nets[n])}</span></div>`).join('');
+ document.getElementById('allCommission').textContent=money(x.commission);document.getElementById('allExpenses').textContent=money(x.expenses);document.getElementById('netProfit').textContent=money(x.profit);document.getElementById('allCount').textContent=state.transactions.length;
+ document.getElementById('recent').innerHTML=state.transactions.slice(-5).reverse().map(txHTML).join('')||'<div class="empty">Bado hakuna miamala.</div>';
+ document.getElementById('expenseList').innerHTML=state.expenses.slice().reverse().map(e=>`<div class="tx row"><span><b>${esc(e.note)}</b><div class="muted">${new Date(e.date).toLocaleString('sw-TZ')}</div></span><b class="danger">-${money(e.amount)}</b></div>`).join('')||'<div class="empty">Hakuna matumizi yaliyorekodiwa.</div>';
+ renderHistory();renderOpening();
+}
+function txHTML(t){return `<div class="tx row"><span><b>${t.type} · ${esc(t.network)}</b><div class="muted">${new Date(t.date).toLocaleString('sw-TZ')} ${t.note?'· '+esc(t.note):''}</div><div class="muted">Kamisheni: ${money(t.commission)}</div></span><span style="text-align:right"><b>${money(t.amount)}</b><div class="pill">${t.type==='Weka fedha'?'Kuweka':'Kutoa'}</div></span></div>`}
+function renderHistory(){let q=(document.getElementById('searchTx')?.value||'').toLowerCase();let arr=state.transactions.filter(t=>(t.network+' '+t.type+' '+(t.note||'')).toLowerCase().includes(q)).slice().reverse();document.getElementById('historyList').innerHTML=arr.map(txHTML).join('')||'<div class="empty">Hakuna miamala inayolingana.</div>'}
+function renderOpening(){document.getElementById('openingCash').value=state.openingCash;document.getElementById('openingNetworks').innerHTML=NETS.map(n=>`<label>${n} - salio la mwanzo<input type="number" min="0" data-open="${n}" value="${state.opening[n]||0}"></label>`).join('')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showTab(id){document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));if(id==='history')renderHistory();if(id==='reports')renderAll()}
+function openForm(type){showTab('transaction');document.getElementById('txType').value=type;document.getElementById('txDate').value=dateNow()}
+document.getElementById('txForm').addEventListener('submit',e=>{e.preventDefault();let t={id:Date.now(),type:document.getElementById('txType').value,network:document.getElementById('network').value,amount:Number(document.getElementById('amount').value),commission:Number(document.getElementById('commission').value)||0,date:new Date(document.getElementById('txDate').value).toISOString(),note:document.getElementById('note').value.trim()};if(!t.amount||t.amount<=0)return alert('Weka kiasi sahihi.');state.transactions.push(t);e.target.reset();document.getElementById('commission').value=0;save();showTab('dashboard');alert('Muamala umehifadhiwa.')});
+document.getElementById('expenseForm').addEventListener('submit',e=>{e.preventDefault();state.expenses.push({id:Date.now(),note:document.getElementById('expenseNote').value.trim(),amount:Number(document.getElementById('expenseAmount').value),date:new Date().toISOString()});e.target.reset();save();alert('Matumizi yamehifadhiwa.')});
+document.getElementById('openingForm').addEventListener('submit',e=>{e.preventDefault();state.openingCash=Number(document.getElementById('openingCash').value)||0;document.querySelectorAll('[data-open]').forEach(i=>state.opening[i.dataset.open]=Number(i.value)||0);save();alert('Salio la mwanzo limehifadhiwa.')});
+function exportCSV(){let rows=[['Aina','Mtandao','Kiasi TSh','Kamisheni TSh','Tarehe','Maelezo'],...state.transactions.map(t=>[t.type,t.network,t.amount,t.commission,t.date,t.note||'']),[],['MATUMIZI','Sababu','Kiasi TSh','Tarehe'],...state.expenses.map(e=>['Matumizi',e.note,e.amount,e.date])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');let blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ngusa-money-taarifa.csv';a.click();URL.revokeObjectURL(a.href)}
+function resetData(){if(confirm('Una uhakika? Taarifa zote zitafutwa kwenye kifaa hiki. Pakua CSV kwanza kama unahitaji nakala.')){state=fresh();save();showTab('dashboard')}}
+document.getElementById('txDate').value=dateNow();renderAll();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
